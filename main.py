@@ -1,68 +1,66 @@
-from typing import Final
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+import json
 
-TOKEN: Final = '123456789:xxxxxxxxxxxxxxxxxxxx'
-BOT_USERNAME: Final = '@yourbotname'
 
-# Commands
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Olá! Obrigado pela presença! Nós somos a Loja Fe Fitness!')
+async def vendas(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    keyboard = [
+        ["1. Calcas", "2. Camisas"]
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
+    await update.message.reply_text("Por favor, escolha uma opção: \n1. Calcas \n2. Camisas", reply_markup=reply_markup)
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Eu sou o robô da loja! Digite algo para que eu possa responder!')
+    # Defina uma variável no contexto para saber que o usuário está esperando a seleção
+    context.user_data['esperando_selecao'] = True
 
-async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Este é um comando personalizado!')
 
-async def custom_command1(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Este é um comando personalizado!')
+async def opcao_escolhida(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # Verifique se o usuário está esperando pela seleção. Se não estiver, apenas retorne
+    if not context.user_data.get('esperando_selecao'):
+        return
 
-# Responses
-def handle_response(text: str) -> str:       # respostas de manipulação
-    processed: str = text.lower()
+    text = update.message.text
 
-    if 'hello' in processed:
-        return 'Hey there!'
+    # Primeiro, vamos criar um dicionário para associar o nome das calças a seus arquivos de imagem:
+    calcados = {
+        "1. Calca 1": "assets/calca1.png",
+        "2. Calca 2": "assets/calca2.jpeg",
+        "3. Calca 3": "assets/calca3.jpeg"
+    }
 
-    if 'how are you' in processed:
-        return 'I am good!'
+    if text == "1" or text == "1. Calcas":
+        for descricao, caminho_imagem in calcados.items():
+            with open(caminho_imagem, "rb") as image_file:
+                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_file, caption=descricao)
+    elif text == "2" or text == "2. Camisas":
+        resposta = "\n".join([
+            "1. Camisa 1",
+            "2. Camisa 2",
+            "3. Camisa 3"
+        ])
+        await update.message.reply_text(resposta)
+    else:
+        resposta = "Opção não reconhecida. Por favor, use uma das opcoes fornecidas."
+        await update.message.reply_text(resposta)
 
-    if "i love python!" in processed:
-        return 'Remember to subscribe!'
+    # Após a seleção, resete a variável de contexto
+    context.user_data['esperando_selecao'] = False
 
-    return 'I do not understand what you wrote...'
 
-# Handling messages (Reponde os usuários)
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_type: str = update.message.chat.type
-    text: str = update.message.text
+async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
-    print(f'User ({update.message.chat.id}) in {message_type}: "{text}"')
 
-    response: str = handle_response(text)
-    
-    print('Bot:', response)
-    await update.message.reply_text(response)
+with open("config.json", "r") as f:
+    config = json.load(f)
 
-# Trata dos erros
-async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(f'Update {update} caused error {context.error}')
+TOKEN = config["TELEGRAM_BOT_TOKEN"]
 
-if __name__ == '__main__':
-    print('Starting bot...')
-    app = Application.builder().token(TOKEN).build()
+app = ApplicationBuilder().token(TOKEN).build()
 
-    # Commands
-    app.add_handler(CommandHandler('start', start_command))
-    app.add_handler(CommandHandler('help', help_command))
-    app.add_handler(CommandHandler('custom', custom_command))
-    app.add_handler(CommandHandler('custom', custom_command1))
+app.add_handler(CommandHandler("hello", hello))
+app.add_handler(CommandHandler("vendas", vendas))
+app.add_handler(MessageHandler(
+    filters.TEXT & ~filters.COMMAND, opcao_escolhida))
 
-    # Messages
-    app.add_handler(MessageHandler(filters.TEXT,handle_message))
-
-    # Errors
-    app.add_error_handler(error)
-    print('Polling...')
-    app.run_polling(poll_interval=3)
+app.run_polling()
