@@ -1,13 +1,22 @@
 # fefitness-telegram-bot
 
-t.me/FeFitnessBot
+    Bot for Telegram
+    t.me/FeFitnessBot
 
-Bot for Telegram
+# Documentation
 
-# using library
+    Python Telegram Bot - https://docs.python-telegram-bot.org/
+    Telegram Library - https://core.telegram.org/bots/api
 
-https://docs.python-telegram-bot.org/
+# Install
 
-# telegram library
+    $ pip install python-telegram-bot --upgrade
 
-https://core.telegram.org/bots/api
+# Config
+
+    - Create a config file named config.json based in config-template.json
+    - Insert your token
+
+# Run
+
+    python main.py
