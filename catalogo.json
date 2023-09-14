@@ -1,0 +1,25 @@
+{
+    "calcas": {
+        "1. legging-jacar": "assets/calca/legging-jacar.jpg",
+        "2. legging-new-vision": "assets/calca/legging-new-vision.jpg",
+        "3. legging-wonder": "assets/calca/legging-wonder.jpg"
+    },
+    "shorts": {
+        "1. short-blackout": "assets/short/short-blackout.jpg",
+        "2. short-cordao": "assets/short/short-cordao.jpg",
+        "3. short-jacar": "assets/short/short-jacar.jpg"
+    },
+    "blusinhas": {
+        "1. blusinha-canoa": "assets/blusinha/blusinha-canoa.jpg",
+        "2. blusinha-long": "assets/blusinha/blusinha-long.jpg",
+        "3. regata": "assets/blusinha/regata.jpg"
+    },
+    "tops": {
+        "1. top-basico": "assets/top/top-basico.jpg",
+        "2. top-jade": "assets/top/top-jade.jpg"
+    },
+    "casacos": {
+        "1. casaco-corta-vento": "assets/casaco/casaco-corta-vento.jpg",
+        "2. casaco-poliamida": "assets/casaco/casaco-poliamida.jpg"
+    }
+}
