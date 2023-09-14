@@ -5,7 +5,7 @@ from telegram.ext import (
     MessageHandler,
     filters
 )
-from commands import (  # Importe as funções do arquivo commands.py
+from commands import (
     start,
     ajuda,
     vendas,
