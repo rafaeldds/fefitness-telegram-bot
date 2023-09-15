@@ -1,6 +1,8 @@
 import json
-from telegram import (Update, ReplyKeyboardMarkup, ReplyKeyboardRemove)
+from telegram import (Update, ReplyKeyboardMarkup,
+                      ReplyKeyboardRemove, KeyboardButton)
 from telegram.ext import (ContextTypes)
+from reclamacao_flow import (AGUARDANDO_RESPOSTA)
 
 with open("catalogo.json", "r", encoding="utf-8") as file:
     CATALOGO = json.load(file)
@@ -15,19 +17,14 @@ def desligar_menu_vendas(func):
     ):
         if context.user_data.get('menu_vendas'):
             context.user_data['menu_vendas'] = False
-            await update.message.reply_text(
-                "Para voltar ao menu vendas, "
-                + "digite /vendas, "
-                + "ou acesso pelo menu interativo do chat.",
-                reply_markup=ReplyKeyboardRemove()
-            )
         return await func(update, context, *args, **kwargs)
     return wrapper
 
 
 async def vendas(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
+
     categorias = list(CATALOGO.keys())
     keyboard = [[f"{i+1}. {categorias[i]}" for i in range(len(categorias))]]
     menu = "\n".join(
@@ -39,11 +36,12 @@ async def vendas(
         reply_markup=reply_markup
     )
     context.user_data['menu_vendas'] = True
+    return -1
 
 
 async def vendas_catalogo(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> True:
 
     if not context.user_data.get('menu_vendas'):
         return
@@ -62,6 +60,7 @@ async def vendas_catalogo(
     else:
         resposta = "Opção inválida. Por favor, use uma das opcoes fornecidas."
         await update.message.reply_text(resposta)
+    return -1
 
 
 @desligar_menu_vendas
@@ -76,47 +75,60 @@ async def start(
 @desligar_menu_vendas
 async def ajuda(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
-        "Como podemos te ajudar?"
+        "Como podemos te ajudar?",
+        reply_markup=ReplyKeyboardRemove()
     )
+    return -1
 
 
 @desligar_menu_vendas
 async def parceria(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
         "Se você está interessado em uma parceria, "
-        + "entre em contato conosco para discutir as oportunidades."
+        + "entre em contato conosco para discutir as oportunidades.",
+        reply_markup=ReplyKeyboardRemove()
     )
+    return -1
 
 
 @desligar_menu_vendas
 async def mensagem(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
         "Você pode deixar uma mensagem aqui. "
-        + "Estamos ansiosos para ouvir de você!"
+        + "Estamos ansiosos para ouvir de você!",
+        reply_markup=ReplyKeyboardRemove()
     )
+    return -1
 
 
 @desligar_menu_vendas
 async def sugestao(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
         "Se você tiver uma sugestão, "
-        + "sinta-se à vontade para compartilhá-la conosco."
+        + "sinta-se à vontade para compartilhá-la conosco.",
+        reply_markup=ReplyKeyboardRemove()
     )
+    return -1
 
 
 @desligar_menu_vendas
 async def reclamacao(
         update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> None:
+        context: ContextTypes.DEFAULT_TYPE) -> int:
+    keyboard = [[KeyboardButton("Sim"), KeyboardButton("Não")]]
+    reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
+
     await update.message.reply_text(
-        "Se você tiver uma reclamação, "
-        + "sinta-se à vontade para compartilhá-la conosco."
+        "Deseja nos enviar uma reclamação?",
+        reply_markup=reply_markup
     )
+
+    return AGUARDANDO_RESPOSTA
