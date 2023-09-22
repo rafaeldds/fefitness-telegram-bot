@@ -1,8 +1,30 @@
 import json
-from telegram import (Update, ReplyKeyboardMarkup,
-                      ReplyKeyboardRemove, KeyboardButton)
-from telegram.ext import (ContextTypes)
-from reclamacao_flow import (AGUARDANDO_RESPOSTA)
+from telegram import (
+    Update,
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    KeyboardButton
+)
+from telegram.ext import (
+    ContextTypes,
+    MessageHandler,
+    filters,
+    CommandHandler,
+    ConversationHandler
+)
+from reclamacao_flow import (
+    receber_resposta,
+    receber_nome,
+    receber_reclamacao,
+    receber_email,
+    receber_telefone,
+    cancel,
+    AGUARDANDO_EMAIL,
+    AGUARDANDO_NOME,
+    AGUARDANDO_RECLAMACAO,
+    AGUARDANDO_RESPOSTA,
+    AGUARDANDO_TELEFONE
+)
 
 with open("catalogo.json", "r", encoding="utf-8") as file:
     CATALOGO = json.load(file)
@@ -17,6 +39,8 @@ def desligar_menu_vendas(func):
     ):
         if context.user_data.get('menu_vendas'):
             context.user_data['menu_vendas'] = False
+        if context.user_data.get('menu_reclamacao'):
+            context.user_data['menu_reclamacao'] = False
         return await func(update, context, *args, **kwargs)
     return wrapper
 
@@ -132,3 +156,20 @@ async def reclamacao(
     )
 
     return AGUARDANDO_RESPOSTA
+
+reclamacao_conversation_handler = ConversationHandler(
+    entry_points=[CommandHandler('reclamacao', reclamacao)],
+    states={
+        AGUARDANDO_RESPOSTA: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, receber_resposta)],
+        AGUARDANDO_NOME: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, receber_nome)],
+        AGUARDANDO_TELEFONE: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, receber_telefone)],
+        AGUARDANDO_EMAIL: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, receber_email)],
+        AGUARDANDO_RECLAMACAO: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, receber_reclamacao)]
+    },
+    fallbacks=[CommandHandler('cancel', cancel)]
+)

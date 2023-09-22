@@ -15,13 +15,19 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=ReplyKeyboardRemove()
     )
     context.user_data.clear()
-    return -1
+
+
+async def check_if_user_still_here(update, context) -> bool:
+    rtn: bool = False
+    if not context.user_data.get('menu_reclamacao'):
+        await cancel(update, context)
+        rtn = True
+    return rtn
 
 
 async def receber_resposta(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
-    # TODO We need to force the user leave this menu ...
     resposta = update.message.text
     if resposta == "Não":
         await update.message.reply_text(
@@ -30,6 +36,7 @@ async def receber_resposta(
         )
         return -1
     if resposta == "Sim":
+        context.user_data['menu_reclamacao'] = True
         await update.message.reply_text(
             "Qual o seu nome completo?",
             reply_markup=ReplyKeyboardRemove()
@@ -43,6 +50,10 @@ async def receber_nome(
         context: ContextTypes.DEFAULT_TYPE) -> int:
     nome = update.message.text
     context.user_data['nome'] = nome
+
+    if await check_if_user_still_here(update, context):
+        return -1
+
     await update.message.reply_text(
         "Qual o seu número de telefone caso necessitarmos entrar em contato?"
     )
@@ -54,6 +65,10 @@ async def receber_telefone(
         context: ContextTypes.DEFAULT_TYPE) -> int:
     telefone = update.message.text
     context.user_data['telefone'] = telefone
+
+    if await check_if_user_still_here(update, context):
+        return -1
+
     await update.message.reply_text("Qual o seu e-mail?")
     return AGUARDANDO_EMAIL
 
@@ -63,6 +78,10 @@ async def receber_email(
         context: ContextTypes.DEFAULT_TYPE) -> int:
     email = update.message.text
     context.user_data['email'] = email
+
+    if await check_if_user_still_here(update, context):
+        return -1
+
     await update.message.reply_text(
         "Agora, por favor, digite sua reclamação em apenas uma mensagem."
     )
@@ -79,6 +98,9 @@ async def receber_reclamacao(
 
     corpo_email = f"Reclamação de {nome}:\n\n{reclamacao}\n\nContato:\nTelefone: {telefone}\nEmail: {email}"
     send_email("RECLAMAÇÃO", corpo_email)
+
+    if await check_if_user_still_here(update, context):
+        return -1
 
     await update.message.reply_text(
         "Sua reclamação foi enviada com sucesso e iremos responder assim que possível!"
