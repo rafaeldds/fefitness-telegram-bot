@@ -2,8 +2,7 @@ import json
 from telegram import (
     Update,
     ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
-    KeyboardButton
+    ReplyKeyboardRemove
 )
 from telegram.ext import (
     ContextTypes,
@@ -12,26 +11,26 @@ from telegram.ext import (
     CommandHandler,
     ConversationHandler
 )
-from reclamacao_flow import (
+from leave_message_flow import (
     dsm_menu_options,
-    dsm_wait_first_reply,
-    receber_nome,
-    receber_reclamacao,
-    receber_email,
-    receber_telefone,
+    lmsg_receive_menu,
+    lmsg_receive_name,
+    lmsg_receive_email_text,
+    lmsg_receive_email,
+    lmsg_receive_tel_number,
     cancel,
-    AGUARDANDO_EMAIL,
-    AGUARDANDO_NOME,
-    AGUARDANDO_RECLAMACAO,
-    WAIT_REPLY,
-    AGUARDANDO_TELEFONE
+    LMSG_WAIT_EMAIL,
+    LMSG_WAIT_NAME,
+    LMSG_WAIT_EMAIL_TEXT,
+    LMSG_WAIT_MENU,
+    LMSG_WAIT_TEL_NUMBER
 )
 
 with open("catalog.json", "r", encoding="utf-8") as file:
     CATALOG = json.load(file)
 
 
-def disable_menu_catalog_opened(func):
+def update_opened_menus(func):
     async def wrapper(
             update: Update,
             context: ContextTypes.DEFAULT_TYPE,
@@ -40,8 +39,8 @@ def disable_menu_catalog_opened(func):
     ):
         if context.user_data.get('menu_catalog_opened'):
             context.user_data['menu_catalog_opened'] = False
-        if context.user_data.get('menu_reclamacao'):
-            context.user_data['menu_reclamacao'] = False
+        if context.user_data.get('menu_leave_message'):
+            context.user_data['menu_leave_message'] = False
         return await func(update, context, *args, **kwargs)
     return wrapper
 
@@ -90,7 +89,7 @@ async def catalog_option(
     return -1
 
 
-@disable_menu_catalog_opened
+@update_opened_menus
 async def start(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -99,24 +98,25 @@ async def start(
         fr"Olá, {user.mention_html()}! Bem-vindo ao bot da loja FeFitness.")
 
 
-@disable_menu_catalog_opened
+@update_opened_menus
 async def help(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
+    context.user_data['menu_leave_message'] = False
     await update.message.reply_text(
         "1. /catalogo_produtos\n"
-        + " Use essa opcao para poder consultar nosso catalogo de produtos\n\n"
+        + "- Use essa opcao para poder consultar nosso catalogo de produtos\n\n"
         + " 2. /deixe_sua_mensagem\n"
-        + " Use essa opcao para nos deixar uma mensagem\n\n"
+        + "- Use essa opcao para nos deixar uma mensagem\n\n"
         + " 3. /ajuda\n"
-        + " Use essa opcao para obter ajuda com relacao ao menu\n",
+        + "- Use essa opcao para obter ajuda com relacao ao menu\n",
         reply_markup=ReplyKeyboardRemove()
     )
     return -1
 
 
-@disable_menu_catalog_opened
-async def dsm_open_conversation_handler(
+@update_opened_menus
+async def lmsg_menu(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
 
@@ -133,22 +133,26 @@ async def dsm_open_conversation_handler(
         reply_markup=reply_markup
     )
 
-    return WAIT_REPLY
+    context.user_data['menu_leave_message'] = True
 
-deixe_sua_mensagem_conversation_handler = ConversationHandler(
+    return LMSG_WAIT_MENU
+
+leave_message_conversation_handler = ConversationHandler(
     entry_points=[CommandHandler(
-        "deixe_sua_mensagem", dsm_open_conversation_handler)],
+        "deixe_sua_mensagem", lmsg_menu)],
     states={
-        WAIT_REPLY: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, dsm_wait_first_reply)],
-        AGUARDANDO_NOME: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, receber_nome)],
-        AGUARDANDO_TELEFONE: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, receber_telefone)],
-        AGUARDANDO_EMAIL: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, receber_email)],
-        AGUARDANDO_RECLAMACAO: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, receber_reclamacao)]
+        LMSG_WAIT_MENU: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, lmsg_receive_menu)],
+        LMSG_WAIT_NAME: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, lmsg_receive_name)],
+        LMSG_WAIT_TEL_NUMBER: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, lmsg_receive_tel_number)],
+        LMSG_WAIT_EMAIL: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, lmsg_receive_email)],
+        LMSG_WAIT_EMAIL_TEXT: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, lmsg_receive_email_text)]
     },
-    fallbacks=[CommandHandler('cancel', cancel)]
+    fallbacks=[
+        CommandHandler('cancel', cancel)
+    ]
 )
