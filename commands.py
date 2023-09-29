@@ -115,42 +115,6 @@ async def help(
 
 
 @desligar_menu_catalog_opened
-async def parceria(
-        update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> int:
-    await update.message.reply_text(
-        "Se você está interessado em uma parceria, "
-        + "entre em contato conosco para discutir as oportunidades.",
-        reply_markup=ReplyKeyboardRemove()
-    )
-    return -1
-
-
-@desligar_menu_catalog_opened
-async def mensagem(
-        update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> int:
-    await update.message.reply_text(
-        "Você pode deixar uma mensagem aqui. "
-        + "Estamos ansiosos para ouvir de você!",
-        reply_markup=ReplyKeyboardRemove()
-    )
-    return -1
-
-
-@desligar_menu_catalog_opened
-async def sugestao(
-        update: Update,
-        context: ContextTypes.DEFAULT_TYPE) -> int:
-    await update.message.reply_text(
-        "Se você tiver uma sugestão, "
-        + "sinta-se à vontade para compartilhá-la conosco.",
-        reply_markup=ReplyKeyboardRemove()
-    )
-    return -1
-
-
-@desligar_menu_catalog_opened
 async def reclamacao(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
