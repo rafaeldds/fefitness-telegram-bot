@@ -10,7 +10,7 @@ from commands import (
     help,
     products_catalog,
     catalog_option,
-    reclamacao_conversation_handler
+    deixe_sua_mensagem_conversation_handler
 )
 
 with open("config.json", "r", encoding="utf-8") as file:
@@ -23,7 +23,7 @@ app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("ajuda", help))
 app.add_handler(CommandHandler("catalogo_produtos", products_catalog))
-app.add_handler(reclamacao_conversation_handler)
+app.add_handler(deixe_sua_mensagem_conversation_handler)
 app.add_handler(MessageHandler(
     filters.TEXT & ~filters.COMMAND, catalog_option))
 

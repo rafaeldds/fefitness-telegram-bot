@@ -13,7 +13,8 @@ from telegram.ext import (
     ConversationHandler
 )
 from reclamacao_flow import (
-    receber_resposta,
+    dsm_menu_options,
+    dsm_wait_first_reply,
     receber_nome,
     receber_reclamacao,
     receber_email,
@@ -22,7 +23,7 @@ from reclamacao_flow import (
     AGUARDANDO_EMAIL,
     AGUARDANDO_NOME,
     AGUARDANDO_RECLAMACAO,
-    AGUARDANDO_RESPOSTA,
+    WAIT_REPLY,
     AGUARDANDO_TELEFONE
 )
 
@@ -115,24 +116,31 @@ async def help(
 
 
 @disable_menu_catalog_opened
-async def reclamacao(
+async def dsm_open_conversation_handler(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
-    keyboard = [[KeyboardButton("Sim"), KeyboardButton("Não")]]
+
+    printed_menu = "\n".join(
+        [f"{i+1}. {dsm_menu_options[i]}" for i in range(len(dsm_menu_options))])
+
+    keyboard = [
+        [f"{i+1}. {dsm_menu_options[i]}" for i in range(len(dsm_menu_options))]]
+
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
 
     await update.message.reply_text(
-        "Deseja nos enviar uma reclamação?",
+        f"Deseja nos deixar que tipo de mensagem?\n{printed_menu} ",
         reply_markup=reply_markup
     )
 
-    return AGUARDANDO_RESPOSTA
+    return WAIT_REPLY
 
-reclamacao_conversation_handler = ConversationHandler(
-    entry_points=[CommandHandler('reclamacao', reclamacao)],
+deixe_sua_mensagem_conversation_handler = ConversationHandler(
+    entry_points=[CommandHandler(
+        "deixe_sua_mensagem", dsm_open_conversation_handler)],
     states={
-        AGUARDANDO_RESPOSTA: [MessageHandler(
-            filters.TEXT & ~filters.COMMAND, receber_resposta)],
+        WAIT_REPLY: [MessageHandler(
+            filters.TEXT & ~filters.COMMAND, dsm_wait_first_reply)],
         AGUARDANDO_NOME: [MessageHandler(
             filters.TEXT & ~filters.COMMAND, receber_nome)],
         AGUARDANDO_TELEFONE: [MessageHandler(

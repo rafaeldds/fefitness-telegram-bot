@@ -2,11 +2,18 @@ from telegram import (Update, ReplyKeyboardRemove)
 from telegram.ext import (ContextTypes)
 from utils import (send_email)
 
-AGUARDANDO_RESPOSTA = 0
+WAIT_REPLY = 0
 AGUARDANDO_NOME = 1
 AGUARDANDO_TELEFONE = 2
 AGUARDANDO_EMAIL = 3
 AGUARDANDO_RECLAMACAO = 4
+
+dsm_menu_options = [
+    "Sugestao",
+    "Reclamacao",
+    "Parcerias",
+    "Intencao de Compra"
+]
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -25,24 +32,30 @@ async def check_if_user_still_here(update, context) -> bool:
     return rtn
 
 
-async def receber_resposta(
+async def dsm_wait_first_reply(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
-    resposta = update.message.text
-    if resposta == "Não":
-        await update.message.reply_text(
-            "Tudo bem! Se precisar, estamos aqui.",
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return -1
-    if resposta == "Sim":
+    try:
+        text = update.message.text.split(". ")[1]
+    except IndexError:
+        text = update.message.text
+
+    if text in dsm_menu_options:
         context.user_data['menu_reclamacao'] = True
         await update.message.reply_text(
             "Qual o seu nome completo?",
             reply_markup=ReplyKeyboardRemove()
         )
         return AGUARDANDO_NOME
-    return -1
+    else:
+        await update.message.reply_text(
+            "Opcao Invalida. \n"
+            + "Se precisar nos deixar uma mensagem, estamos aqui.\n"
+            + "E so nos chamar de novo no menu /deixe_sua_mensagem"
+            + " para recomecarmos.",
+            reply_markup=ReplyKeyboardRemove()
+        )
+        return -1
 
 
 async def receber_nome(
