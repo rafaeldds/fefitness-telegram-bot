@@ -101,7 +101,12 @@ async def ajuda(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
-        "Como podemos te ajudar?",
+        "1. /catalogo_produtos\n"
+        + " Use essa opcao para poder consultar nosso catalogo de produtos\n\n"
+        + " 2. /deixe_sua_mensagem\n"
+        + " Use essa opcao para nos deixar uma mensagem\n\n"
+        + " 3. /ajuda\n"
+        + " Use essa opcao para obter ajuda com relacao ao menu\n",
         reply_markup=ReplyKeyboardRemove()
     )
     return -1
