@@ -26,68 +26,70 @@ from reclamacao_flow import (
     AGUARDANDO_TELEFONE
 )
 
-with open("catalogo.json", "r", encoding="utf-8") as file:
-    CATALOGO = json.load(file)
+with open("catalog.json", "r", encoding="utf-8") as file:
+    CATALOG = json.load(file)
 
 
-def desligar_menu_vendas(func):
+def desligar_menu_catalog_opened(func):
     async def wrapper(
             update: Update,
             context: ContextTypes.DEFAULT_TYPE,
             *args,
             **kwargs
     ):
-        if context.user_data.get('menu_vendas'):
-            context.user_data['menu_vendas'] = False
+        if context.user_data.get('menu_catalog_opened'):
+            context.user_data['menu_catalog_opened'] = False
         if context.user_data.get('menu_reclamacao'):
             context.user_data['menu_reclamacao'] = False
         return await func(update, context, *args, **kwargs)
     return wrapper
 
 
-async def vendas(
+async def products_catalog(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
 
-    categorias = list(CATALOGO.keys())
-    keyboard = [[f"{i+1}. {categorias[i]}" for i in range(len(categorias))]]
+    categories = list(CATALOG.keys())
+
+    keyboard = [[f"{i+1}. {categories[i]}" for i in range(len(categories))]]
     menu = "\n".join(
-        [f"{i+1}. {categorias[i]}" for i in range(len(categorias))])
+        [f"{i+1}. {categories[i]}" for i in range(len(categories))])
 
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True)
     await update.message.reply_text(
         f"Por favor, escolha uma opção:\n{menu}",
         reply_markup=reply_markup
     )
-    context.user_data['menu_vendas'] = True
+    context.user_data['menu_catalog_opened'] = True
     return -1
 
 
-async def vendas_catalogo(
+async def catalog_option(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> True:
 
-    if not context.user_data.get('menu_vendas'):
+    if not context.user_data.get('menu_catalog_opened'):
         return
 
     text = update.message.text.split(". ")[1]
 
-    produtos = CATALOGO.get(text)
-    if produtos:
-        for descricao, caminho_imagem in produtos.items():
-            with open(caminho_imagem, "rb") as image_file:
+    products = CATALOG.get(text)
+    if products:
+        for description, image_path in products.items():
+            with open(image_path, "rb") as image_file:
                 await context.bot.send_photo(
                     chat_id=update.effective_chat.id,
                     photo=image_file,
-                    caption=descricao
+                    caption=description
                 )
     else:
-        resposta = "Opção inválida. Por favor, use uma das opcoes fornecidas."
-        await update.message.reply_text(resposta)
+        await update.message.reply_text(
+            "Opção inválida. Por favor, use uma das opcoes fornecidas."
+        )
     return -1
 
 
-@desligar_menu_vendas
+@desligar_menu_catalog_opened
 async def start(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -96,8 +98,8 @@ async def start(
         fr"Olá, {user.mention_html()}! Bem-vindo ao bot da loja FeFitness.")
 
 
-@desligar_menu_vendas
-async def ajuda(
+@desligar_menu_catalog_opened
+async def help(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
@@ -112,7 +114,7 @@ async def ajuda(
     return -1
 
 
-@desligar_menu_vendas
+@desligar_menu_catalog_opened
 async def parceria(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -124,7 +126,7 @@ async def parceria(
     return -1
 
 
-@desligar_menu_vendas
+@desligar_menu_catalog_opened
 async def mensagem(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -136,7 +138,7 @@ async def mensagem(
     return -1
 
 
-@desligar_menu_vendas
+@desligar_menu_catalog_opened
 async def sugestao(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -148,7 +150,7 @@ async def sugestao(
     return -1
 
 
-@desligar_menu_vendas
+@desligar_menu_catalog_opened
 async def reclamacao(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
