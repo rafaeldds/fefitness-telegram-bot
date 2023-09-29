@@ -30,7 +30,7 @@ with open("catalog.json", "r", encoding="utf-8") as file:
     CATALOG = json.load(file)
 
 
-def desligar_menu_catalog_opened(func):
+def disable_menu_catalog_opened(func):
     async def wrapper(
             update: Update,
             context: ContextTypes.DEFAULT_TYPE,
@@ -89,7 +89,7 @@ async def catalog_option(
     return -1
 
 
-@desligar_menu_catalog_opened
+@disable_menu_catalog_opened
 async def start(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -98,7 +98,7 @@ async def start(
         fr"Olá, {user.mention_html()}! Bem-vindo ao bot da loja FeFitness.")
 
 
-@desligar_menu_catalog_opened
+@disable_menu_catalog_opened
 async def help(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -114,7 +114,7 @@ async def help(
     return -1
 
 
-@desligar_menu_catalog_opened
+@disable_menu_catalog_opened
 async def reclamacao(
         update: Update,
         context: ContextTypes.DEFAULT_TYPE) -> int:
