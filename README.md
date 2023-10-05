@@ -24,37 +24,121 @@
     </p>
 </div>
 
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+          <ul>
+            <li><a href="#prerequisites">Telegram Bot File</a></li>
+            <li><a href="#prerequisites">Email configuration</a></li>
+          </ul>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-# fefitness-telegram-bot
+
+## About The Project
+
+This project was created to meet a need at the FeFitness store.
+The store's main objective was to provide support to its customers via Telegram in an interactive way and 24/7.
+This robot meets the requirements and provides the user with options so that they can perform the following functions:
+
+Consult the product catalog
+* Leave a suggestion message
+* Leave a complaint message
+* Leave a message to form Partnerships
+* Leave a message for Purchase Intent
 
     Bot for Telegram
     t.me/FeFitnessBot
 
-# Documentation
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-    Python Telegram Bot - https://docs.python-telegram-bot.org/
-    Telegram Library - https://core.telegram.org/bots/api
+### Built With
 
-# Install
+This section list language and frameworks/libraries used in the project.
 
-    $ pip install python-telegram-bot --upgrade
+* [![Python][Python.com]][Python-url]
+* [![PythonTelegramBot][PythonTelegramBot.com]][PythonTelegramBot-url]
+* [![TelegramLibrary][TelegramLibrary.com]][TelegramLibrary-url]
 
-# Config
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-    - Create a config file named config.json based in config-template.json
-    - Insert your token
+## Getting Started
 
-# Email configuration
+Here we have instructions on setting up your project locally. To get start, please, follow these simple steps.
 
-    Read the content in the website below to configure your google email
-    https://help.warmupinbox.com/en/articles/4934806-configure-for-google-workplace-with-two-factor-authentication-2fa
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Run
+### Prerequisites
 
-    python main.py
+In a windows machine.
 
+- Download and install [Python 3.12](https://www.python.org/downloads/windows/)
+- Download and install [Git last version]([https://www.python.org/downloads/windows/](https://git-scm.com/download/win))
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+#### Telegram Bot File
+
+- Create the telegram bot and get the token. [Telegram BotFather](https://core.telegram.org/bots/tutorial)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+ 
+#### Email configuration
+
+- Read the content in the website below to [Configure for Google Workplace](https://help.warmupinbox.com/en/articles/4934806-configure-for-google-workplace-with-two-factor-authentication-2fa) and get your email app password.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Installation
+
+1. Clone this repository:
+  ```sh
+  git clone https://github.com/rafaeldds/fefitness-telegram-bot.git
+  ```
+2. Open the console in the repository cloned
+3. Install python-telegram-bot 
+  ```sh
+  pip install python-telegram-bot 
+  ```
+4. Create a config file based in config-template.json
+  - Insert your bot token
+  - Insert your e-mail configuration
+  - Save your your file with the name config.json in the main path 
+5. Run the project
+  ```sh
+  python main.py
+  ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+Rafael Dias
+Project Link: [Github - rafaeldds](https://github.com/rafaeldds)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [contributors-shield]: https://img.shields.io/github/contributors/rafaeldds/fefitness-telegram-bot.svg?style=for-the-badge
 [contributors-url]: https://github.com/rafaeldds/fefitness-telegram-bot/graphs/contributors
@@ -68,3 +152,9 @@
 [license-url]: https://github.com/rafaeldds/fefitness-telegram-bot/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/rafael-diias/
+[Python.com]: https://www.python.org/static/img/python-logo.png
+[Python-url]: https://www.python.org/
+[PythonTelegramBot.com]: https://raw.githubusercontent.com/python-telegram-bot/logos/master/logo-text/png/ptb-logo-text_768.png
+[PythonTelegramBot-url]: https://docs.python-telegram-bot.org/
+[TelegramLibrary.com]: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEQZZZfVLxiGaVTZCHV23c7YOqBZb23IirPSpZEUNpgnSeagGtN5y3STx90fng3UCKyLQ&usqp=CAU
+[TelegramLibrary-url]: https://core.telegram.org/bots/api
