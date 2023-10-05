@@ -63,8 +63,7 @@ Consult the product catalog
 * Leave a message to form Partnerships
 * Leave a message for Purchase Intent
 
-To use and test this bot hosted access
-- [FeFitnessBot](https://t.me/FeFitnessBot)
+To use and test this bot hosted access [FeFitnessBot](https://t.me/FeFitnessBot)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -89,7 +88,7 @@ Here we have instructions on setting up your project locally. To get start, plea
 In a windows machine.
 
 - Download and install [Python 3.12](https://www.python.org/downloads/windows/)
-- Download and install [Git last version]([https://www.python.org/downloads/windows/](https://git-scm.com/download/win))
+- Download and install [Git last version](https://git-scm.com/download/win)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
