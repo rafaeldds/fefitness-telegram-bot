@@ -63,7 +63,7 @@ Consult the product catalog
 * Leave a message to form Partnerships
 * Leave a message for Purchase Intent
 
-To use and test this bot hosted access [FeFitnessBot](https://t.me/FeFitnessBot)
+To use and test it online access the bot hosted access [FeFitnessBot](https://web.telegram.org/k/#@FeFitnessBot)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
