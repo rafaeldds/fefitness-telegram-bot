@@ -39,8 +39,8 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
           <ul>
-            <li><a href="#prerequisites">Telegram Bot File</a></li>
-            <li><a href="#prerequisites">Email configuration</a></li>
+            <li><a href="#telegram-bot-file">Telegram Bot File</a></li>
+            <li><a href="#email-configuration">Email configuration</a></li>
           </ul>
         <li><a href="#installation">Installation</a></li>
       </ul>
@@ -63,8 +63,8 @@ Consult the product catalog
 * Leave a message to form Partnerships
 * Leave a message for Purchase Intent
 
-    Bot for Telegram
-    t.me/FeFitnessBot
+To use and test this bot hosted access
+- [FeFitnessBot](https://t.me/FeFitnessBot)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -129,7 +129,7 @@ In a windows machine.
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GNU GENERAL PUBLIC LICENSE. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
